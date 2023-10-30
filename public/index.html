@@ -6,10 +6,12 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Calculator</title>
   <link href="styles.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
   <script src="calculator.js" defer></script>
 </head>
 <body>
   <div class="calculator-grid">
+    <span class="span-two" style="text-align: right; margin-right: 10px">Last Answer:</span><span id="lastAnswer" style="font-weight: bold"></span>
     <div class="output">
       <div data-previous-operand class="previous-operand"></div>
       <div data-current-operand class="current-operand"></div>

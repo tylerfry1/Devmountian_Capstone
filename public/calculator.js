@@ -1,7 +1,8 @@
 class Calculator {
-	constructor(previousOperandTextElement, currentOperandTextElement) {
+	constructor(previousOperandTextElement, currentOperandTextElement, lastAnswerElement) {
 		this.previousOperandTextElement = previousOperandTextElement;
 		this.currentOperandTextElement = currentOperandTextElement;
+		this.lastAnswerElement = lastAnswerElement;
 		this.clear;
 	}
 	clear() {
@@ -14,7 +15,7 @@ class Calculator {
 	}
 	appendNumber(number) {
 		if (number === "." && this.currentOperand.includes(".")) return;
-		this.currentOperand = this.currentOperand.toString() + number.toString();
+		this.currentOperand = this.currentOperand?.toString() + number.toString();
 	}
 	chooseOperation(operation) {
 		if (this.currentOperand === "") return;
@@ -49,6 +50,10 @@ class Calculator {
 		this.currentOperand = computation;
 		this.operation = undefined;
 		this.previousOperand = "";
+		axios.post("/save-last-answer", {
+			lastAnswer: this.currentOperand
+		});
+		lastAnswerElement.innerText = this.currentOperand;
 	}
 	getDisplayNumber(number) {
 		const stringNumber = number.toString();
@@ -82,6 +87,7 @@ class Calculator {
 		}
 	}
 }
+
 const numberButtons = document.querySelectorAll("[data-number]");
 const operationButtons = document.querySelectorAll("[data-operation]");
 const equalsButton = document.querySelector("[data-equals]");
@@ -93,10 +99,12 @@ const previousOperandTextElement = document.querySelector(
 const currentOperandTextElement = document.querySelector(
 	"[data-current-operand"
 );
+const lastAnswerElement = document.getElementById("lastAnswer");
 
 const calculator = new Calculator(
 	previousOperandTextElement,
-	currentOperandTextElement
+	currentOperandTextElement,
+	lastAnswerElement
 );
 
 numberButtons.forEach((button) => {
@@ -130,4 +138,8 @@ allClearButton.addEventListener("click", (button) => {
 deleteButton.addEventListener("click", (button) => {
 	calculator.delete();
 	calculator.updateDisplay();
+});
+
+axios.get("retrieve-last-answer").then(({ data }) => {
+	lastAnswerElement.innerText = data;
 });
